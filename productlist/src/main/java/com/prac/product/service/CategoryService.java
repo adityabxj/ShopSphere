@@ -31,7 +31,7 @@ public class CategoryService {
     }
 
     public String deleteCategory(Long category_id){
-        categoryRepository.findById(category_id).orElseThrow(()-> new RuntimeException("Category not found!"));
+        categoryRepository.deleteById(category_id);
         return "Category deleted successfully";
     }
 }
