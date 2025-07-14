@@ -48,6 +48,7 @@ public class ProductService {
     }
 
     public String deleteProduct(Long product_id){
+        if (!productRepository.existsById(product_id)) throw new CategoryNotFoundException("Category ID: " + product_id + " not found!");
         productRepository.deleteById(product_id);
         return "Product deleted successfully";
     }

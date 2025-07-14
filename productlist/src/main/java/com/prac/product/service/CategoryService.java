@@ -36,8 +36,9 @@ public class CategoryService {
         return CategoryMapper.toCategoryDto(category);
     }
 
-    public String deleteCategory(Long category_id) {
-        categoryRepository.deleteById(category_id);
+    public String deleteCategory(Long categoryId) {
+        if (!categoryRepository.existsById(categoryId)) throw new CategoryNotFoundException("Category ID: " + categoryId + " not found!");
+        categoryRepository.deleteById(categoryId);
         return "Category deleted successfully";
     }
 }
