@@ -1,6 +1,7 @@
 package com.prac.product.controller;
 
 import com.prac.product.dto.CategoryDTO;
+import com.prac.product.exception.CategoryAlreadyExistsException;
 import com.prac.product.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,9 @@ public class CategoryController {
 
     // createCategory
     @PostMapping("/create")
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO){
-        return new ResponseEntity<>(categoryService.createCategory(categoryDTO), HttpStatus.CREATED);
+    public ResponseEntity<?> createCategory(@RequestBody CategoryDTO categoryDTO){
+        CategoryDTO savedCategory = categoryService.createCategory(categoryDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
 
     // getAllCategories
@@ -30,14 +32,14 @@ public class CategoryController {
     }
 
     // getCategoryById
-    @GetMapping("/get/{category_id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long category_id){
+    @GetMapping("/get")
+    public ResponseEntity<CategoryDTO> getCategoryById(@RequestParam("categoryId") Long category_id){
         return new ResponseEntity<>(categoryService.getCategoryById(category_id), HttpStatus.OK);
     }
 
     // deleteCategory
-    @DeleteMapping("/delete/{category_id}")
-    public ResponseEntity<String> deleteCategoryById(@PathVariable Long category_id){
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteCategoryById(@RequestParam("categoryId") Long category_id){
         return new ResponseEntity<>(categoryService.deleteCategory(category_id), HttpStatus.OK);
     }
 }

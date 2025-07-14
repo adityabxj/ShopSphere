@@ -9,7 +9,7 @@ public class ProductMapper {
     public static ProductDTO toProductDTO(Product product){
         return new ProductDTO(
                 product.getProduct_id(),
-                product.getProduct_name(),
+                product.getProductName(),
                 product.getDescription(),
                 product.getPrice(),
                 product.getCategory().getCategory_id()
@@ -19,7 +19,7 @@ public class ProductMapper {
     public static Product toProductEntity(ProductDTO productDTO, Category category){
         Product product = new Product();
         product.setProduct_id(productDTO.getProduct_id());
-        product.setProduct_name(productDTO.getProduct_name());
+        product.setProductName(productDTO.getProductName());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setCategory(category);

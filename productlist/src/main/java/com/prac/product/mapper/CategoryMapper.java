@@ -11,7 +11,7 @@ public class CategoryMapper {
         }
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setCategory_id(category.getCategory_id());
-        categoryDTO.setCategory_name(category.getCategory_name());
+        categoryDTO.setCategoryName(category.getCategoryName());
         categoryDTO.setProducts(category.getProducts().stream()
                 .map(ProductMapper::toProductDTO).toList());
         return categoryDTO;
@@ -19,7 +19,7 @@ public class CategoryMapper {
 
     public  static Category toCategoryEntity(CategoryDTO categoryDTO){
         Category category = new Category();
-        category.setCategory_name(categoryDTO.getCategory_name());
+        category.setCategoryName(categoryDTO.getCategoryName());
         return category;
     }
 }

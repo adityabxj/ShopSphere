@@ -2,35 +2,41 @@ package com.prac.product.service;
 
 import com.prac.product.dto.CategoryDTO;
 import com.prac.product.entity.Category;
+import com.prac.product.exception.CategoryAlreadyExistsException;
+import com.prac.product.exception.CategoryNotFoundException;
 import com.prac.product.mapper.CategoryMapper;
 import com.prac.product.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class CategoryService {
-    //    getAllCategories, createCategory, getCategoryById, deleteCategory
     private CategoryRepository categoryRepository;
 
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-      Category category = CategoryMapper.toCategoryEntity(categoryDTO);
-      category = categoryRepository.save(category);
-      return  CategoryMapper.toCategoryDto(category);
+        Optional<Category> optionalCategory = categoryRepository.findByCategoryName(categoryDTO.getCategoryName());
+        if (optionalCategory.isPresent()) {
+            throw new CategoryAlreadyExistsException("Category " + categoryDTO.getCategoryName() + " already exists!");
+        }
+        Category category = CategoryMapper.toCategoryEntity(categoryDTO);
+        category = categoryRepository.save(category);
+        return CategoryMapper.toCategoryDto(category);
     }
 
-    public List<CategoryDTO> getAllCategories(){
+    public List<CategoryDTO> getAllCategories() {
         return categoryRepository.findAll().stream().map(CategoryMapper::toCategoryDto).toList();
     }
 
-    public CategoryDTO getCategoryById(Long category_id){
-       Category category = categoryRepository.findById(category_id).orElseThrow(()-> new RuntimeException("Category not found!"));
-       return CategoryMapper.toCategoryDto(category);
+    public CategoryDTO getCategoryById(Long category_id) {
+        Category category = categoryRepository.findById(category_id).orElseThrow(() -> new CategoryNotFoundException("Category id: "+ category_id +" Not Found!"));
+        return CategoryMapper.toCategoryDto(category);
     }
 
-    public String deleteCategory(Long category_id){
+    public String deleteCategory(Long category_id) {
         categoryRepository.deleteById(category_id);
         return "Category deleted successfully";
     }

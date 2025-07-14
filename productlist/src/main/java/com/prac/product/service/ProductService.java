@@ -3,6 +3,8 @@ package com.prac.product.service;
 import com.prac.product.dto.ProductDTO;
 import com.prac.product.entity.Category;
 import com.prac.product.entity.Product;
+import com.prac.product.exception.CategoryNotFoundException;
+import com.prac.product.exception.ProductNotFoundException;
 import com.prac.product.mapper.ProductMapper;
 import com.prac.product.repository.CategoryRepository;
 import com.prac.product.repository.ProductRepository;
@@ -19,7 +21,7 @@ public class ProductService {
     private CategoryRepository categoryRepository;
 
     public ProductDTO createProduct(ProductDTO productDTO){
-        Category category = categoryRepository.findById(productDTO.getCategory_id()).orElseThrow(()-> new RuntimeException("Category Not Found!"));
+        Category category = categoryRepository.findById(productDTO.getCategory_id()).orElseThrow(()-> new CategoryNotFoundException("Category id: "+ productDTO.getCategory_id() +" Not Found!"));
         Product product = ProductMapper.toProductEntity(productDTO, category);
         product = productRepository.save(product);
         return ProductMapper.toProductDTO(product);
@@ -30,14 +32,14 @@ public class ProductService {
     }
 
     public ProductDTO getProductById(Long product_id){
-       Product product = productRepository.findById(product_id).orElseThrow(()->new RuntimeException("Product not found!"));
+       Product product = productRepository.findById(product_id).orElseThrow(()->new ProductNotFoundException("Product id: "+ product_id +" not found"));
        return ProductMapper.toProductDTO(product);
     }
 
     public ProductDTO updateProduct(Long product_id, ProductDTO productDTO){
-        Product product = productRepository.findById(product_id).orElseThrow(()-> new RuntimeException("Product not found"));
-        Category category = categoryRepository.findById(productDTO.getCategory_id()).orElseThrow(()-> new RuntimeException("Category not found"));
-        product.setProduct_name(productDTO.getProduct_name());
+        Product product = productRepository.findById(product_id).orElseThrow(()-> new ProductNotFoundException("Product id: "+ product_id +" not found"));
+        Category category = categoryRepository.findById(productDTO.getCategory_id()).orElseThrow(()-> new CategoryNotFoundException("Category id: "+ productDTO.getCategory_id() +" Not Found!"));
+        product.setProductName(productDTO.getProductName());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setCategory(category);
